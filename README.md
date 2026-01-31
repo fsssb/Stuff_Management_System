@@ -1,5 +1,5 @@
 
-```markdown
+---
 # 🏢 Stuff Management System (基于多态的职工管理系统)
 
 [![C++ Standard](https://img.shields.io/badge/C%2B%2B-14%2F17-blue.svg?style=flat&logo=c%2B%2B)](https://en.cppreference.com/)
@@ -108,4 +108,5 @@
 ## 📄 License
 
 This project is open-sourced under the MIT License.
-```
+
+---
