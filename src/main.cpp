@@ -70,8 +70,10 @@ int main()
                 sm.findStuff();
                 break;
             case 6://排序职工
+                sm.sortStuff();
                 break;
             case 7://清空文件
+                sm.cleanFile();
                 break;
             default:
                 system("clear");

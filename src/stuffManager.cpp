@@ -475,6 +475,103 @@ void StuffManager::findStuff()
 }
 
 
+//职工排序
+void StuffManager::sortStuff()
+{
+    if(this->m_FileIsEmpty)
+    {
+        cout << "文件不存在或者文件记录为空！" << endl;
+        return;
+    }
+    cout << "请选择排序方式：" << endl;
+    cout << "1.按照员工ID升序排列" << endl;
+    cout << "2.按照员工ID降序排列" << endl;
+
+    int select = 0;
+    cin >> select;
+
+    //开始选择排序
+    for(int i = 0;i < this->m_StuffNum-1;i++)
+    {
+        int targetIndex = i;//记录最大或者最小值
+
+        for(int j = i + 1; j < this->m_StuffNum; j++)
+        {
+            if(select == 1)
+            {
+                if(this->m_StuffArray[i]->m_Id > this->m_StuffArray[j]->m_Id)
+                {
+                    targetIndex = j;
+                }
+            }
+
+            else
+            {
+                if(this->m_StuffArray[i]->m_Id < this->m_StuffArray[j]->m_Id)
+                {
+                    targetIndex = j;
+                }
+            }
+        }
+        if (targetIndex != i)
+        {
+            Stuff* temp = this->m_StuffArray[i];
+            this->m_StuffArray[i] = this->m_StuffArray[targetIndex];
+            this->m_StuffArray[targetIndex] = temp;
+
+        }
+    }
+
+    cout << "排序成功！" << endl;
+    //保存到文件并展示！
+    this->saveFile();
+    this->showStuffInfo(); 
+}
+
+//清空文件
+void StuffManager::cleanFile()
+{
+    // 1. 再次确认 (防止手抖误删)
+    cout << "确认清空？" << endl;
+    cout << "1. 确认" << endl;
+    cout << "2. 返回" << endl;
+
+    int select = 0;
+    cin >> select;
+
+    if (select != 1)
+    {
+        this->CleanAndPause();
+        return;
+    }
+
+    ofstream ofs(FILENAME,ios::trunc);
+    ofs.close();
+
+    if(this->m_StuffArray != nullptr)
+    {
+        //释放每一个数组对象
+        for(int i = 0; i < this->m_StuffNum; i++)
+        {
+            delete this->m_StuffArray[i];
+            this->m_StuffArray[i] = nullptr;
+        }        
+    }
+    //再释放整个数组指针本身
+    delete[] this->m_StuffArray;
+    this->m_StuffArray = nullptr;
+
+    //计数清零
+    this->m_StuffNum = 0;
+
+    //更新文件标志位
+    this->m_FileIsEmpty = true;
+
+    cout << " 清空成功！" << endl;
+
+    this->CleanAndPause();
+}
+
 //清理屏幕并暂停
 void StuffManager::CleanAndPause()
 {

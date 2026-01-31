@@ -50,6 +50,12 @@ public:
     //查找职工
     void findStuff();
 
+    //职工排序
+    void sortStuff();
+
+    //清空文件
+    void cleanFile();
+    
     //清理屏幕并暂停
     void CleanAndPause();
 
