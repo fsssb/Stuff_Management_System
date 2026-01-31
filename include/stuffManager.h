@@ -13,6 +13,7 @@ using namespace std;
 class StuffManager
 {
 public:
+
     //构造函数
     StuffManager();
 
@@ -21,12 +22,6 @@ public:
 
     //退出系统
     void exitSystem();
-
-    //记录当前文件中的人员个数
-    int m_StuffNum;
-
-    //员工数组的指针
-    Stuff** m_StuffArray;
 
     //添加职工函数
     void add_Stuff();
@@ -49,14 +44,30 @@ public:
     //删除离职职工(按职工ID删除)
     void delStuff();
 
+    //修改职工信息
+    void modify_Stuff();
+
+    //查找职工
+    void findStuff();
+
+    //清理屏幕并暂停
+    void CleanAndPause();
+
     //析构函数
     ~StuffManager();
 
 private:
-    //清理屏幕并暂停
-    void CleanAndPause();
+
+    //员工数组的指针
+    Stuff** m_StuffArray;
+
+    //记录当前文件中的人员个数
+    int m_StuffNum;
 
     //文件是否为空的标志
     bool m_FileIsEmpty;
+
+   
+
     
 };

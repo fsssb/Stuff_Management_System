@@ -1,9 +1,5 @@
 #include <iostream>
 #include "stuffManager.h"
-#include "employee.h"
-#include "boss.h"
-#include "manager.h"
-#include "stuff.h"
 
 #include <unistd.h>
 #include <termios.h>
@@ -68,8 +64,10 @@ int main()
                 sm.delStuff();
                 break;
             case 4://修改职工
+                sm.modify_Stuff();
                 break;
             case 5://查找职工
+                sm.findStuff();
                 break;
             case 6://排序职工
                 break;

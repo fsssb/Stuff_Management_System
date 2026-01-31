@@ -3,7 +3,7 @@
 using namespace std;
 
 
-
+//构造函数
 StuffManager::StuffManager()
 {
     ifstream ifs;
@@ -52,28 +52,9 @@ StuffManager::StuffManager()
     //         <<"\t部门编号：" << this->m_StuffArray[i]->m_DeptId 
     //         << endl;
     // }
-    
-
-
 }
 
-StuffManager::~StuffManager()
-{
-    if (this->m_StuffArray != nullptr)
-    {
-        for (int i = 0; i < this->m_StuffNum; i++)
-        {   
-            if (this->m_StuffArray[i] != nullptr)
-            {
-            //删除每一个职工对象
-            delete this->m_StuffArray[i];
-            }
-        }
-        //删除职工数组
-        delete[] this->m_StuffArray;
-    }
-}
-
+//展示菜单
 void StuffManager::showMenu(StuffManager& vm)
 {
     cout << "--------------------------------------" << endl;
@@ -93,6 +74,9 @@ void StuffManager::showMenu(StuffManager& vm)
     cout << endl;
 }
 
+
+
+//退出系统
 void StuffManager::exitSystem()
 {
     system("clear");
@@ -105,7 +89,7 @@ void StuffManager::exitSystem()
 }
 
 
-
+//添加职工函数
 void StuffManager::add_Stuff()
 {
     cout << "请输入要添加的职工数量：" << endl;
@@ -196,15 +180,6 @@ void StuffManager::add_Stuff()
     }
 }
 
-
-
-void StuffManager::CleanAndPause()
-{
-    cout << "请按任意键继续..." << endl;
-    cin.ignore(1024, '\n');
-    cin.get();
-    system("clear");
-}
 //保存文件
 void StuffManager::saveFile()
 {
@@ -220,6 +195,7 @@ void StuffManager::saveFile()
 }
 
 
+//获取职工人数  
 int StuffManager::GetStuffNum()
 {
     ifstream ifs;
@@ -243,6 +219,7 @@ int StuffManager::GetStuffNum()
     return num;
 }
 
+//初始化员工
 void StuffManager::initStuff()
 {
     //初始化职工
@@ -277,6 +254,7 @@ void StuffManager::initStuff()
     ifs.close();
 }
 
+//显示职工信息
 void StuffManager::showStuffInfo()
 {
     if(this->m_FileIsEmpty)
@@ -296,6 +274,7 @@ void StuffManager::showStuffInfo()
 }
 
 
+//职工是否在系统里
 int StuffManager::isExist(int id)
 {
     int index = -1;
@@ -310,8 +289,10 @@ int StuffManager::isExist(int id)
     return index;
 }
 
- void StuffManager::delStuff()
- {
+
+//删除离职职工(按职工ID删除)
+void StuffManager::delStuff()
+{
     if(this->m_FileIsEmpty)
     {
         cout << "文件不存在或者记录为空！" << endl;
@@ -339,13 +320,185 @@ int StuffManager::isExist(int id)
 
             //数据重新写入文件中
             this->saveFile();
-            
+
             cout << " 已经成功删除该员工！" << endl;
         }
     }
 
     this->CleanAndPause();
 
- }
+}
 
 
+//修改职工信息
+void StuffManager::modify_Stuff()
+{
+    if(this->m_FileIsEmpty){
+        cout << "文件不存在或者文件记录为空！" << endl;
+    }
+
+    else
+    {
+        cout << "请输入要修改的职工编号：" << endl;
+        int id;
+        cin >> id;
+
+        int ret = this->isExist(id);
+        if(ret != -1)
+        {
+            delete this->m_StuffArray[ret];
+
+            int newId = 0;
+            string newName = "";
+            int newDSelect = 0;
+
+            cout << "查到：" << id << "号职工，请重新输入职工编号：" << endl;
+            cin >> newId;
+            
+            cout << "请重新输入姓名：" << endl;
+            cin >> newName;
+
+            cout << "请重新输入岗位：" << endl;
+            cout << "1.普通员工" << endl;
+            cout << "2.经理" << endl;
+            cout << "3.老板" << endl;
+            cin >> newDSelect;
+
+            Stuff* newStuff = nullptr;
+            switch(newDSelect)
+            {
+                case 1:
+                    newStuff = new Employee(newId,newName,newDSelect);
+                    break;
+                case 2:
+                    newStuff = new Manager(newId,newName,newDSelect);
+                    break;
+                case 3:
+                    newStuff = new Boss(newId,newName,newDSelect);
+                    break;
+                default:
+                    break;
+            }
+
+            this->m_StuffArray[ret] = newStuff;
+
+            cout << "修改成功! " << endl;
+
+            //更新到文件！
+            this->saveFile();
+        }
+        else
+        {
+            cout << "查无此人！无法修改" << endl;
+        }
+    }
+
+    this->CleanAndPause();
+}
+
+
+
+//查找职工
+void StuffManager::findStuff()
+{
+    if(this->m_FileIsEmpty)
+    {
+        cout << "文件不存在或者文件记录为空！" << endl;
+    }
+    else
+    {
+        while(true)
+        {
+            cout << "选择查找方式：" << endl;
+            cout << "1.按照ID查找" << endl;
+            cout << "2.按照姓名查找：" << endl;
+
+            int sel = 0;
+            cin >> sel;
+
+            //按照ID查找
+            if(sel == 1)
+            {   
+                cout << "请输入职工ID：" << endl;
+                int id = 0;
+                cin >> id;
+
+                int ret = this->isExist(id);
+                if(ret != -1)
+                {
+                    cout << "找到此人！信息如下" << endl;
+                    this->m_StuffArray[ret]->showInfo();
+                } 
+                else
+                {
+                    cout << "查无此人！" << endl;
+                }
+
+                break;
+            }
+            
+
+            //按照姓名查找
+            else if(sel == 2)
+            {
+                 //加入是否找到判断标志
+                bool flag = false;
+
+                cout << "请输入职工姓名" << endl;
+                string name = "";
+                cin >> name;
+                for (int i = 0; i < this->m_StuffNum;i++)
+                {
+                    if(this->m_StuffArray[i]->m_name == name)
+                    {
+                        cout << "找到此人！信息如下" << endl;
+                        this->m_StuffArray[i]->showInfo();
+                        flag = true;
+                    }
+                }
+                if(!flag)
+                {
+                    cout << "查无此人！" << endl;
+                }
+                break;
+            }
+
+            //输入其他数字(待优化问题，处理非法输入！)
+            else
+            {
+                cout << "请输入正确的选择序号！" << endl;
+            }
+        }
+    }
+
+    this->CleanAndPause();
+}
+
+
+//清理屏幕并暂停
+void StuffManager::CleanAndPause()
+{
+    cout << "请按任意键继续..." << endl;
+    cin.ignore(1024, '\n');
+    cin.get();
+    system("clear");
+}
+
+
+//析构函数
+StuffManager::~StuffManager()
+{
+    if (this->m_StuffArray != nullptr)
+    {
+        for (int i = 0; i < this->m_StuffNum; i++)
+        {   
+            if (this->m_StuffArray[i] != nullptr)
+            {
+            //删除每一个职工对象
+            delete this->m_StuffArray[i];
+            }
+        }
+        //删除职工数组
+        delete[] this->m_StuffArray;
+    }
+}
