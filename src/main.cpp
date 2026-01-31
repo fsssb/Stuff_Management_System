@@ -62,8 +62,10 @@ int main()
                 sm.add_Stuff();
                 break;
             case 2://显示职工
+                sm.showStuffInfo();
                 break;
             case 3://删除职工
+                sm.delStuff();
                 break;
             case 4://修改职工
                 break;

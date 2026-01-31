@@ -19,7 +19,7 @@ StuffManager::StuffManager()
         ifs.close();
         return;
     }
-    
+
     //文件存在但为空的情况
     char ch;
     ifs >> ch;
@@ -32,22 +32,26 @@ StuffManager::StuffManager()
         ifs.close();
         return;
     }  
+
     //文件存在且不为空的情况 
     int num = this->GetStuffNum();
-    cout << "职工个数为：" << num << endl;
+    // cout << "职工个数为：" << num << endl;
 
     this->m_StuffNum = num;
 
     //将文件中的数据存到数组中
     this->initStuff();
+    
+    //文件为空标志为假！
+    this->m_FileIsEmpty = false;
 
-    for(int i = 0;i < this->m_StuffNum;i++)
-    {
-        cout << "职工编号： " << this->m_StuffArray[i]->m_Id
-            <<"\t职工姓名：" << this->m_StuffArray[i]->m_name
-            <<"\t部门编号：" << this->m_StuffArray[i]->m_DeptId 
-            << endl;
-    }
+    // for(int i = 0;i < this->m_StuffNum;i++)
+    // {
+    //     cout << "职工编号： " << this->m_StuffArray[i]->m_Id
+    //         <<"\t职工姓名：" << this->m_StuffArray[i]->m_name
+    //         <<"\t部门编号：" << this->m_StuffArray[i]->m_DeptId 
+    //         << endl;
+    // }
     
 
 
@@ -272,3 +276,76 @@ void StuffManager::initStuff()
     }
     ifs.close();
 }
+
+void StuffManager::showStuffInfo()
+{
+    if(this->m_FileIsEmpty)
+    {
+        cout <<"文件不存在或者文件记录为空！"<< endl;
+    }
+
+    else
+    {
+        for(int i = 0;i < this->m_StuffNum;i++)
+        {
+            this->m_StuffArray[i]->showInfo();
+        }
+    }
+
+    this->CleanAndPause();
+}
+
+
+int StuffManager::isExist(int id)
+{
+    int index = -1;
+    for(int i = 0;i < this->m_StuffNum; i++)
+    {
+        if(this->m_StuffArray[i]->m_Id == id)
+        {
+            index = i;
+            break;
+        }
+    }
+    return index;
+}
+
+ void StuffManager::delStuff()
+ {
+    if(this->m_FileIsEmpty)
+    {
+        cout << "文件不存在或者记录为空！" << endl;
+    }
+
+    else
+    {
+        int id;
+        cout << "请输入您要删除的职工ID:" << endl;
+        cin >> id;
+
+        if(this->isExist(id) == -1)
+        {
+            cout << "系统中不存在该员工！" << endl; 
+        }
+
+        else
+        {
+            int target = this->isExist(id);
+            for (int i = target; i < this->m_StuffNum - 1; i++) //边界条件
+             {
+                this->m_StuffArray[i] = this->m_StuffArray[i+1];
+            }
+            this->m_StuffNum--;
+
+            //数据重新写入文件中
+            this->saveFile();
+            
+            cout << " 已经成功删除该员工！" << endl;
+        }
+    }
+
+    this->CleanAndPause();
+
+ }
+
+

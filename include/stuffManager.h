@@ -40,6 +40,15 @@ public:
     //初始化员工
     void initStuff();
 
+    //显示职工信息
+    void showStuffInfo();
+
+    //职工是否在系统里
+    int isExist(int id);
+
+    //删除离职职工(按职工ID删除)
+    void delStuff();
+
     //析构函数
     ~StuffManager();
 
