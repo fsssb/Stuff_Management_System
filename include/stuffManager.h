@@ -8,7 +8,6 @@
 #include <fstream>
 #define FILENAME "stuffFile.txt"
 
-using namespace std;
 
 class StuffManager
 {

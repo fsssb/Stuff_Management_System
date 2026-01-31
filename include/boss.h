@@ -2,13 +2,13 @@
 #include <iostream>
 #include "stuff.h"
 
-using namespace std;
+
 
 class Boss: public Stuff
 {
 public:
 
-    Boss(int id,string name,int dId);
+    Boss(int id,std::string name,int dId);
     virtual void showInfo();
-    virtual string getDeptName();
+    virtual std::string getDeptName();
 };
